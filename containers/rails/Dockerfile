@@ -6,7 +6,8 @@ RUN apt-get install -y gtk2.0
 RUN apt-get update -qq && \ 
     apt-get install -y build-essential \
     libpq-dev \
-    nodejs
+    nodejs \
+    mariadb-client
 
 WORKDIR /usr/src/app
 
