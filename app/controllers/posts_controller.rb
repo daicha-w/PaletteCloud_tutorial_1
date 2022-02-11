@@ -9,6 +9,7 @@ class PostsController < ApplicationController
   end
 
   def new
+    @post = Post.new
   end
 
   def create
@@ -21,7 +22,8 @@ class PostsController < ApplicationController
       # redirect
       redirect_to posts_path
     else
-      render plain: @post.errors.inspect
+      # render plain: @post.errors.inspect
+      render 'new'
     end
   end
 
@@ -29,4 +31,5 @@ class PostsController < ApplicationController
     def post_params
       params.require(:post).permit(:title, :body)
     end
+
 end
