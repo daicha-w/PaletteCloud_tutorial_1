@@ -1,11 +1,10 @@
 class PostsController < ApplicationController
 
   def index
-    @posts = Post.all.order(created_at: 'desc')
+    @posts = Post.all.order(created_at: :desc)
   end
 
   def show
-    @post = Post.find(params[:id])
   end
 
   def new
@@ -13,42 +12,45 @@ class PostsController < ApplicationController
   end
 
   def create
-    # render plain: params[:post].inspect
-    # save
-    # @post = Post.new(params[:post])
-    # @post = Post.new(params.require(:post).permit(:title, :body))
     @post = Post.new(post_params)
     if @post.save
-      # redirect
-      redirect_to posts_path
+      redirect_to posts_path, flash: { success: 'Post saved successfully.' }
     else
-      # render plain: @post.errors.inspect
-      render 'new'
+      render :new
+      flash.now[:error] = 'Failed to save post.'
     end
   end
 
   def edit
-    @post = Post.find(params[:id])
   end
 
   def update
-    @post =Post.find(params[:id])
-    if @post.update(post_params)
-      redirect_to posts_path
+    if post.update(post_params)
+      redirect_to posts_path, flash: { success: 'Post updated successfully.' }
     else
-      render 'edit'
+      render :edit
+      flash.now[:error] = 'Failed to update post.'
     end
   end
 
   def destroy
-    @post =Post.find(params[:id])
-    @post.destroy
-    redirect_to posts_path
+    if post.destroy
+      redirect_to posts_path, flash: { success: 'Post deleted successfully.' }
+    else
+      render :index
+      flash.now[:error] = 'Failed to delete post.'
+    end
   end
 
   private
     def post_params
       params.require(:post).permit(:title, :body)
     end
+
+    def post
+      @post ||= ::Post.find(params[:id])
+    end
+
+    helper_method :post
 
 end
